@@ -1,32 +1,72 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
-  </div>
+  <v-app>
+    <v-app-bar
+      app
+      color="primary"
+      dark
+    >
+      <div class="d-flex align-center">
+        <v-img
+          alt="Vuetify Logo"
+          class="shrink mr-2"
+          contain
+          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
+          transition="scale-transition"
+          width="40"
+        />
+
+        <v-img
+          alt="Vuetify Name"
+          class="shrink mt-1 hidden-sm-and-down"
+          contain
+          min-width="100"
+          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
+          width="100"
+        />
+      </div>
+
+      <v-spacer></v-spacer>
+
+        <span v-if="user" class="ma-5">{{ user.email }}</span>
+        <v-btn @click="login" v-if="!user">login</v-btn>
+        <v-btn @click="logout" v-if="user">logout</v-btn>
+
+    </v-app-bar>
+
+    <v-main>
+      <router-view/>
+    </v-main>
+  </v-app>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator';
 
-#nav {
-  padding: 30px;
-}
+@Component({
+  components: {
+  },
+})
+export default class App extends Vue {
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
+  mounted() {
+    if(!this.user) {
+      this.$router.push('/')
+    }
+  }
 
-#nav a.router-link-exact-active {
-  color: #42b983;
+  login() {
+    this.$store.dispatch('authenticate', { email: "test@test.be", password: "secret" })
+  }
+
+  logout() {
+    this.$store.dispatch('logout');
+  }
+
+  get user() {
+    return this.$store.getters.user;
+  }
+
+
+
 }
-</style>
+</script>
